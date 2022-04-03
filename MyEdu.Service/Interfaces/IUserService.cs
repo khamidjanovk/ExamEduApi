@@ -17,6 +17,5 @@ namespace MyEdu.Service.Interfaces
         Task<BaseResponse<IEnumerable<User>>> GetAllAsync(PaginationParams @params, Expression<Func<User, bool>> expression = null);
         Task<BaseResponse<bool>> DeleteAsync(Expression<Func<User, bool>> expression);
         Task<BaseResponse<User>> UpdateAsync(long id, UserDto studentDto);
-        Task<string> SaveFileAsync(Stream file, string fileName);
     }
 }

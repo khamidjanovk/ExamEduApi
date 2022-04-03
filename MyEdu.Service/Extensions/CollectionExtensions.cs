@@ -1,4 +1,10 @@
-﻿namespace MyEdu.Service.Extensions
+﻿using System.Collections.Generic;
+using System.Linq;
+using MyEdu.Domain.Configurations;
+using MyEdu.Service.Helpers;
+using Newtonsoft.Json;
+
+namespace MyEdu.Service.Extensions
 {
     public static class CollectionExtensions
     {
