@@ -8,7 +8,7 @@ namespace MyEdu.Service.Extensions
 {
     public static class CollectionExtensions
     {
-        public static IEnumerable<T> ToPagedList<T>(this IEnumerable<T> source, PaginationParams @params)
+        public static IQueryable<T> ToPagedList<T>(this IQueryable<T> source, PaginationParams @params)
         {
             var metaData = new PaginationMetaData(source.Count(), @params);
             var json = JsonConvert.SerializeObject(metaData);

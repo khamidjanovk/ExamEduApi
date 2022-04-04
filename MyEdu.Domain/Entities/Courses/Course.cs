@@ -4,7 +4,7 @@ namespace MyEdu.Domain.Entities.Courses
 {
     public class Course
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; }
         public CourseType CourseType { get; set; }
         public string Author { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -39,8 +40,8 @@ namespace MyEdu.Service.Services
             var response = new BaseResponse<User>();
 
             // check for user
-            var existStudent = await unitOfWork.Users.GetAsync(p => p.PhoneNumber == userDto.PhoneNumber);
-            if (existStudent is not null)
+            var existUser = await unitOfWork.Users.GetAsync(p => p.PhoneNumber == userDto.PhoneNumber);
+            if (existUser is not null)
             {
                 response.Error = new ErrorResponse(400, "User is exist");
                 return response;
@@ -62,25 +63,25 @@ namespace MyEdu.Service.Services
         {
             var response = new BaseResponse<User>();
 
-            var student = await unitOfWork.Users.GetAsync(expression);
-            if (student is null)
+            var user = await unitOfWork.Users.GetAsync(expression);
+            if (user is null)
             {
                 response.Error = new ErrorResponse(404, "User not found");
                 return response;
             }
 
-            response.Data = student;
+            response.Data = user;
 
             return response;
         }
 
-        public async Task<BaseResponse<IEnumerable<User>>> GetAllAsync(PaginationParams @params, Expression<Func<User, bool>> expression = null)
+        public async Task<BaseResponse<IQueryable<User>>> GetAllAsync(PaginationParams @params, Expression<Func<User, bool>> expression = null)
         {
-            var response = new BaseResponse<IEnumerable<User>>();
+            var response = new BaseResponse<IQueryable<User>>();
 
-            var students = await unitOfWork.Users.GetAllAsync(expression);
+            var users = await unitOfWork.Users.GetAllAsync(expression);
 
-            response.Data = students.ToPagedList(@params);
+            response.Data = users.ToPagedList(@params);
 
             return response;
         }

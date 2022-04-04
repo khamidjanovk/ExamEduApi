@@ -17,9 +17,9 @@ namespace MyEdu.Data.Repositories.Services
             this.mapper = mapper;
         }
         
-        public async Task<User> UpdateAsync(User user)
+        public new async Task<User> UpdateAsync(User user)
         {
-            var result = dbSet.FirstOrDefault(x => x.Id == user.Id);
+            var result = await dbSet.FirstOrDefaultAsync(x => x.Id == user.Id);
 
             result = mapper.Map(user, result);
 

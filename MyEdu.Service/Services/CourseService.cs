@@ -7,11 +7,13 @@ using MyEdu.Domain.Configurations;
 using MyEdu.Domain.Entities.Courses;
 using MyEdu.Domain.Entities.Users;
 using MyEdu.Service.DTOs;
+using MyEdu.Service.Extensions;
 using MyEdu.Service.Helpers;
 using MyEdu.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -33,6 +35,7 @@ namespace MyEdu.Service.Services
             this.config = config;
             httpContext = new HttpContextHelper();
         }
+
         public async Task<BaseResponse<Course>> CreateAsync(CourseDto courseDto)
         {
             var response = new BaseResponse<Course>();
@@ -41,7 +44,7 @@ namespace MyEdu.Service.Services
             var existStudent = await unitOfWork.Courses.GetAsync(p => p.Name == courseDto.Name);
             if (existStudent is not null)
             {
-                response.Error = new ErrorResponse(400, "User is exist");
+                response.Error = new ErrorResponse(400, "Course is exist");
                 return response;
             }
 
@@ -57,19 +60,52 @@ namespace MyEdu.Service.Services
             return response;
         }
 
-        public Task<BaseResponse<bool>> DeleteAsync(Expression<Func<User, bool>> expression)
+        public async Task<BaseResponse<bool>> DeleteAsync(Expression<Func<Course, bool>> expression)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponse<bool>();
+
+            // check for exist student
+            var existCourse = await unitOfWork.Courses.GetAsync(expression);
+            if (existCourse is null)
+            {
+                response.Error = new ErrorResponse(404, "Course not found");
+                return response;
+            }
+
+            var result = await unitOfWork.Courses.UpdateAsync(existCourse);
+
+            await unitOfWork.SaveChangesAsync();
+
+            response.Data = true;
+
+            return response;
         }
 
-        public Task<BaseResponse<IEnumerable<Course>>> GetAllAsync(PaginationParams @params, Expression<Func<User, bool>> expression = null)
+        public async Task<BaseResponse<IQueryable<Course>>> GetAllAsync(PaginationParams @params, Expression<Func<Course, bool>> expression = null)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponse<IQueryable<Course>>();
+
+            var courses = await unitOfWork.Courses.GetAllAsync(expression);
+
+            response.Data = courses.ToPagedList(@params);
+
+            return response;
         }
 
-        public Task<BaseResponse<Course>> GetAsync(Expression<Func<Course, bool>> expression)
+        public async Task<BaseResponse<Course>> GetAsync(Expression<Func<Course, bool>> expression)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponse<Course>();
+
+            var course = await unitOfWork.Courses.GetAsync(expression);
+            if (course is null)
+            {
+                response.Error = new ErrorResponse(404, "Course not found");
+                return response;
+            }
+
+            response.Data = course;
+
+            return response;
         }
 
         public async Task<string> SaveFileAsync(Stream file, string fileName)
@@ -84,9 +120,28 @@ namespace MyEdu.Service.Services
             return fileName;
         }
 
-        public Task<BaseResponse<User>> UpdateAsync(long id, UserDto studentDto)
+        public async Task<BaseResponse<Course>> UpdateAsync(long id, CourseDto courseDto)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponse<Course>();
+
+            var result = await unitOfWork.Courses.GetAsync(p => p.Id == id);
+
+            if (result is null)
+            {
+                response.Error = new ErrorResponse(404, "Course not found");
+                return response;
+            }
+
+            var course = mapper.Map<Course>(courseDto);
+            course.Id = id;
+
+            await unitOfWork.Courses.UpdateAsync(course);
+
+            await unitOfWork.SaveChangesAsync();
+
+            response.Data = course;
+
+            return response;
         }
     }
 }

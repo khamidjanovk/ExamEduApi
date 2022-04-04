@@ -7,5 +7,6 @@ namespace MyEdu.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        
     }
 }
