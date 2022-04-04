@@ -22,11 +22,11 @@ namespace MyEdu.Service.Services
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
-        public async Task<BaseResponse<Part>> CreateAsync(PartDto partDto)
+        public async Task<BaseResponse<Part>> CreateAsync(PartDto partDto)  
         {
             var response = new BaseResponse<Part>();
 
-            // check for user
+            // check for part
             var existPart = await unitOfWork.Parts.GetAsync(p => p.Name == partDto.Name);
             if (existPart is not null)
             {
@@ -46,9 +46,25 @@ namespace MyEdu.Service.Services
             return response;
         }
 
-        public Task<BaseResponse<bool>> DeleteAsync(Expression<Func<Part, bool>> expression)
+        public async Task<BaseResponse<bool>> DeleteAsync(Expression<Func<Part, bool>> expression)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponse<bool>();
+
+            // check for exist part
+            var existPart = await unitOfWork.Parts.GetAsync(expression);
+            if (existPart is null)
+            {
+                response.Error = new ErrorResponse(404, "User not found");
+                return response;
+            }
+
+            var result = await unitOfWork.Parts.UpdateAsync(existPart);
+
+            await unitOfWork.SaveChangesAsync();
+
+            response.Data = true;
+
+            return response;
         }
 
         public async Task<BaseResponse<IQueryable<Part>>> GetAllAsync(PaginationParams @params, Expression<Func<Part, bool>> expression = null)
@@ -78,9 +94,29 @@ namespace MyEdu.Service.Services
             return response;
         }
 
-        public Task<BaseResponse<Part>> UpdateAsync(long id, PartDto partDto)
+        public async Task<BaseResponse<Part>> UpdateAsync(long id, PartDto partDto)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponse<Part>();
+
+            var result = await unitOfWork.Parts.GetAsync(p => p.Id == id);
+
+            if (result is null)
+            {
+                response.Error = new ErrorResponse(404, "User not found");
+                return response;
+            }
+
+            var part = mapper.Map<Part>(partDto);
+
+            part.Id = id;
+
+            await unitOfWork.Parts.UpdateAsync(part);
+
+            await unitOfWork.SaveChangesAsync();
+
+            response.Data = part;
+
+            return response;
         }
     }
 }
