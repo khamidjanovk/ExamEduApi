@@ -1,10 +1,10 @@
 ﻿using MyEdu.Data.Repositories.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using MyEdu.Data.Contexts;
 
 namespace MyEdu.Data.Repositories.Services
 {
@@ -13,12 +13,10 @@ namespace MyEdu.Data.Repositories.Services
     {
         internal EducationCenterDbContext dbContext;
         internal DbSet<T> dbSet;
-        private readonly ILogger logger;
-        public GenericRepository(EducationCenterDbContext dbContext, ILogger logger)
+        public GenericRepository(EducationCenterDbContext dbContext)
         {
             this.dbContext = dbContext;
             this.dbSet = dbContext.Set<T>();
-            this.logger = logger;
         }
 
         public async Task<T> CreateAsync(T entity)

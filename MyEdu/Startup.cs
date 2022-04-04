@@ -1,16 +1,19 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using MyEdu.Data.Contexts;
+using MyEdu.Data.Repositories.Interfaces;
+using MyEdu.Data.Repositories.Services;
+using MyEdu.Extensions;
+using MyEdu.Service.Helpers;
+using MyEdu.Service.Interfaces;
+using MyEdu.Service.Mappers;
+using MyEdu.Service.Services;
 
 namespace MyEdu
 {
@@ -26,25 +29,46 @@ namespace MyEdu
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<EducationCenterDbContext>(options =>
+            {
+                options.UseNpgsql(Configuration.GetConnectionString("EducationDb"));
+            });
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(
+                config => config
+                .JsonSerializerOptions
+                .IgnoreReadOnlyProperties = true);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyEdu", Version = "v1" });
             });
+
+            services.AddHttpContextAccessor();
+
+            services.AddAutoMapper(typeof(MapperConfiguration));
+
+            services.AddCustomServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsProduction())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyEdu v1"));
             }
 
+            if (app.ApplicationServices.GetService<IHttpContextAccessor>() != null)
+            {
+                HttpContextHelper.Accessor = app.ApplicationServices.GetRequiredService<IHttpContextAccessor>();
+            }
+
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
 
             app.UseRouting();
 
