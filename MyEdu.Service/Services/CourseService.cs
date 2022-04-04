@@ -48,8 +48,13 @@ namespace MyEdu.Service.Services
                 return response;
             }
 
+            //check for CourseType
+            var existCourseType = await unitOfWork.CourseTypes.GetAsync(p => p.Id == courseDto.CourseTypeId);
+
             // create after checking success
             var mappedCourse = mapper.Map<Course>(courseDto);
+
+            
 
             var result = await unitOfWork.Courses.CreateAsync(mappedCourse);
 

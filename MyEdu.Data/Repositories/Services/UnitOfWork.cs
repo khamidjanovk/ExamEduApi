@@ -19,6 +19,8 @@ namespace MyEdu.Data.Repositories.Services
         public ILessonRepository Lessons { get; private set; }
 
         public IPartRepository Parts { get; private set; }
+        
+        public ICourseTypeRepository CourseTypes { get; private set; }
 
         public UnitOfWork(EducationCenterDbContext context, IConfiguration config, IMapper mapper)
         {
@@ -27,6 +29,7 @@ namespace MyEdu.Data.Repositories.Services
 
             Courses = new CourseRepository(context, mapper);
             Users = new UserRepository(context, mapper);
+            CourseTypes = new CourseTypeRepository(context, mapper);
             Lessons = new LessonRepository(context);
             Parts = new PartRepository(context);
         }

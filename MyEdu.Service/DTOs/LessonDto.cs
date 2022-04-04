@@ -8,6 +8,6 @@ namespace MyEdu.Service.DTOs
         public string Name { get; set; }
         public string Length { get; set; }
         public IFormFile VideoUrl { get; set; }
-        public long Part { get; set; }
+        public long PartId { get; set; }
     }
 }

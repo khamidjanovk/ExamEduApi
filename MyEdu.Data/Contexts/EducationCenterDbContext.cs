@@ -17,6 +17,7 @@ namespace MyEdu.Data.Contexts
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Part> Parts { get; set; }
         public virtual DbSet<Lesson> Lessons { get; set; }
+        public virtual DbSet<CourseType> CourseTypes { get; set; }
 
     }
 }
