@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MyEdu.Data.Repositories.Interfaces;
 using MyEdu.Domain.Common;
 using MyEdu.Domain.Configurations;
@@ -7,6 +8,7 @@ using MyEdu.Service.DTOs;
 using MyEdu.Service.Extensions;
 using MyEdu.Service.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -36,8 +38,20 @@ namespace MyEdu.Service.Services
                 return response;
             }
 
+            var existPart = await unitOfWork.Parts.GetAsync(p => p.Id == lessonDto.PartId);
+            if (existPart is null)
+            {
+                response.Error = new ErrorResponse(404, "Part is not found");
+                return response;
+            }
+
             // create after checking success
             var mappedLesson = mapper.Map<Lesson>(lessonDto);
+            mappedLesson.Part = existPart;
+
+            existPart.Lessons.Add(mappedLesson);
+
+            await unitOfWork.Parts.UpdateAsync(existPart);
 
             var result = await unitOfWork.Lessons.CreateAsync(mappedLesson);
 
@@ -75,7 +89,7 @@ namespace MyEdu.Service.Services
 
             var lessons = await unitOfWork.Lessons.GetAllAsync(expression);
 
-            response.Data = lessons.ToPagedList(@params);
+            response.Data = lessons.ToPagedList(@params).Include(p => p.Part);
 
             return response;
         }
@@ -84,13 +98,13 @@ namespace MyEdu.Service.Services
         {
             var response = new BaseResponse<Lesson>();
 
-            var lesson = await unitOfWork.Lessons.GetAsync(expression);
+            var lesson = (await unitOfWork.Lessons.GetAllAsync(expression)).Include(p => p.Part).FirstOrDefault();
             if (lesson is null)
             {
                 response.Error = new ErrorResponse(404, "User not found");
                 return response;
             }
-
+            
             response.Data = lesson;
 
             return response;

@@ -22,17 +22,18 @@ namespace MyEdu.Data.Repositories.Services
         
         public ICourseTypeRepository CourseTypes { get; private set; }
 
-        public UnitOfWork(EducationCenterDbContext context, IConfiguration config, IMapper mapper)
+        public UnitOfWork(EducationCenterDbContext context, IConfiguration config)
         {
             this.config = config;
             this.context = context;
 
-            Courses = new CourseRepository(context, mapper);
-            Users = new UserRepository(context, mapper);
-            CourseTypes = new CourseTypeRepository(context, mapper);
+            Courses = new CourseRepository(context);
+            Users = new UserRepository(context);
+            CourseTypes = new CourseTypeRepository(context);
             Lessons = new LessonRepository(context);
             Parts = new PartRepository(context);
         }
+        
         public async Task SaveChangesAsync()
         {
             await context.SaveChangesAsync();

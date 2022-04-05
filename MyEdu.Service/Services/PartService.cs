@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MyEdu.Data.Repositories.Interfaces;
 using MyEdu.Domain.Common;
 using MyEdu.Domain.Configurations;
@@ -73,7 +74,7 @@ namespace MyEdu.Service.Services
 
             var parts = await unitOfWork.Parts.GetAllAsync(expression);
 
-            response.Data = parts.ToPagedList(@params);
+            response.Data = parts.ToPagedList(@params).Include(p => p.Lessons);
 
             return response;
         }
@@ -82,7 +83,7 @@ namespace MyEdu.Service.Services
         {
             var response = new BaseResponse<Part>();
 
-            var part = await unitOfWork.Parts.GetAsync(expression);
+            var part = (await unitOfWork.Parts.GetAllAsync(expression)).Include(p => p.Lessons).FirstOrDefault();
             if (part is null)
             {
                 response.Error = new ErrorResponse(404, "User not found");

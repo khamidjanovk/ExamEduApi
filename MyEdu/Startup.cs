@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +15,7 @@ using MyEdu.Service.Helpers;
 using MyEdu.Service.Interfaces;
 using MyEdu.Service.Mappers;
 using MyEdu.Service.Services;
+using System.Text.Json.Serialization;
 
 namespace MyEdu
 {
@@ -29,20 +31,30 @@ namespace MyEdu
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews().
+                AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
+
             services.AddDbContext<EducationCenterDbContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("EducationDb"));
             });
 
             services.AddControllers().AddJsonOptions(
-                config => config
-                .JsonSerializerOptions
-                .IgnoreReadOnlyProperties = true);
+                config => {
+                    config
+                    .JsonSerializerOptions
+                    .IgnoreReadOnlyProperties = true;
+                });
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyEdu", Version = "v1" });
             });
+
+            services.AddEntityFrameworkNpgsql().AddDbContext<EducationCenterDbContext>();
 
             services.AddHttpContextAccessor();
 

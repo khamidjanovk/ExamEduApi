@@ -41,7 +41,9 @@ namespace MyEdu.Service.Services
             var response = new BaseResponse<Course>();
 
             // check for course
-            var existStudent = await unitOfWork.Courses.GetAsync(p => p.Name == courseDto.Name);
+            var existStudent = 
+                await unitOfWork.Courses.GetAsync(p => p.Name == courseDto.Name);
+            
             if (existStudent is not null)
             {
                 response.Error = new ErrorResponse(400, "Course is exist");
@@ -49,16 +51,28 @@ namespace MyEdu.Service.Services
             }
 
             //check for CourseType
-            var existCourseType = await unitOfWork.CourseTypes.GetAsync(p => p.Id == courseDto.CourseTypeId);
-
-            // create after checking success
+            var existCourseType = 
+                await unitOfWork.CourseTypes.GetAsync(p => p.Id == courseDto.CourseTypeId);
+            
             var mappedCourse = mapper.Map<Course>(courseDto);
 
-            
+            mappedCourse.CourseType = existCourseType;
+
+            var resultFile = 
+                await SaveFile
+                .SaveFileAsync
+                (courseDto.Image.OpenReadStream(),
+                config,
+                env, 
+                courseDto.Image.FileName);
+
+            mappedCourse.ImageUrl = resultFile.FileName;
 
             var result = await unitOfWork.Courses.CreateAsync(mappedCourse);
 
             await unitOfWork.SaveChangesAsync();
+
+            result.ImageUrl = resultFile.WebUrl;
 
             response.Data = result;
 
@@ -113,36 +127,35 @@ namespace MyEdu.Service.Services
             return response;
         }
 
-        public async Task<string> SaveFileAsync(Stream file, string fileName)
-        {
-            fileName = Guid.NewGuid().ToString("N") + "_" + fileName;
-            string storagePath = config.GetSection("Storage:ImageUrl").Value;
-            string filePath = Path.Combine(env.WebRootPath, $"{storagePath}/{fileName}");
-            FileStream mainFile = File.Create(filePath);
-            await file.CopyToAsync(mainFile);
-            mainFile.Close();
-
-            return fileName;
-        }
-
         public async Task<BaseResponse<Course>> UpdateAsync(long id, CourseDto courseDto)
         {
             var response = new BaseResponse<Course>();
 
-            var result = await unitOfWork.Courses.GetAsync(p => p.Id == id);
+            var course = await unitOfWork.Courses.GetAsync(p => p.Id == id);
+
+            course.Author = courseDto.Author;
+            course.Description = courseDto.Description;
+            course.Name = courseDto.Name;
+            course.CreatedDate = courseDto.CreatedDate;
+            course.CourseType = 
+                await unitOfWork.CourseTypes.GetAsync(p => p.Id == courseDto.CourseTypeId);
+            course.LearnAbout = courseDto.LearnAbout;
+            course.ImageUrl = 
+                (await SaveFile
+                .SaveFileAsync(courseDto.Image.OpenReadStream(),
+                config, 
+                env, 
+                courseDto.Image.FileName)).FileName;
+
+            var result = await unitOfWork.Courses.UpdateAsync(course);
+
+            await unitOfWork.SaveChangesAsync();
 
             if (result is null)
             {
-                response.Error = new ErrorResponse(404, "Course not found");
+                response.Error = new ErrorResponse(404, "User not found");
                 return response;
             }
-
-            var course = mapper.Map<Course>(courseDto);
-            course.Id = id;
-
-            await unitOfWork.Courses.UpdateAsync(course);
-
-            await unitOfWork.SaveChangesAsync();
 
             response.Data = course;
 

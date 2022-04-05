@@ -11,6 +11,7 @@ using MyEdu.Data.Repositories.Interfaces;
 using MyEdu.Domain.Common;
 using MyEdu.Domain.Configurations;
 using MyEdu.Domain.Entities.Users;
+using MyEdu.Service.Configurations;
 using MyEdu.Service.DTOs;
 using MyEdu.Service.Extensions;
 using MyEdu.Service.Helpers;
@@ -49,7 +50,7 @@ namespace MyEdu.Service.Services
 
             // create after checking success
             var mappedUser = mapper.Map<User>(userDto);
-
+            mappedUser.Password = HashPassword.Create(mappedUser.Password);
             var result = await unitOfWork.Users.CreateAsync(mappedUser);
 
             await unitOfWork.SaveChangesAsync();

@@ -57,7 +57,7 @@ namespace MyEdu.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async ValueTask<ActionResult<BaseResponse<User>>> DeleteCourseAsync(long id)
+        public async ValueTask<ActionResult<BaseResponse<bool>>> DeleteCourseAsync(long id)
         {
             var user = await userService.DeleteAsync(p => p.Id == id);
 

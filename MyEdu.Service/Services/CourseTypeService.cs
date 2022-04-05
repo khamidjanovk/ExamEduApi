@@ -113,22 +113,21 @@ namespace MyEdu.Service.Services
         {
             var response = new BaseResponse<CourseType>();
 
-            var result = await unitOfWork.CourseTypes.GetAsync(p => p.Id == id);
+            var courseType = await unitOfWork.CourseTypes.GetAsync(p => p.Id == id);
 
+            courseType.Name = courseTypeDto.Name;
+
+            var result = await unitOfWork.CourseTypes.UpdateAsync(courseType);
+
+            await unitOfWork.SaveChangesAsync();
+            
             if (result is null)
             {
-                response.Error = new ErrorResponse(404, "Course not found");
+                response.Error = new ErrorResponse(404, "User not found");
                 return response;
             }
 
-            var courseType = mapper.Map<CourseType>(courseTypeDto);
-            courseType.Id = id;
-
-            await unitOfWork.CourseTypes.UpdateAsync(courseType);
-
-            await unitOfWork.SaveChangesAsync();
-
-            response.Data = courseType;
+            response.Data = result;
 
             return response;
         }

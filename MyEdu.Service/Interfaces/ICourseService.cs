@@ -19,6 +19,5 @@ namespace MyEdu.Service.Interfaces
         Task<BaseResponse<IQueryable<Course>>> GetAllAsync(PaginationParams @params, Expression<Func<Course, bool>> expression = null);
         Task<BaseResponse<bool>> DeleteAsync(Expression<Func<Course, bool>> expression);
         Task<BaseResponse<Course>> UpdateAsync(long id, CourseDto courseDto);
-        Task<string> SaveFileAsync(Stream file, string fileName);
     }
 }

@@ -9,21 +9,8 @@ namespace MyEdu.Data.Repositories.Services
 {
     public class CourseRepository : GenericRepository<Course>, ICourseRepository
     {
-        private readonly IMapper mapper;
-        public CourseRepository(EducationCenterDbContext dbContext, IMapper mapper) : base(dbContext)
+        public CourseRepository(EducationCenterDbContext dbContext) : base(dbContext)
         {
-            this.mapper = mapper;
-        }
-
-        public new async Task<Course> UpdateAsync(Course course)
-        {
-            var result = await dbSet.FirstOrDefaultAsync(x => x.Id == course.Id);
-
-            result = mapper.Map(course, result);
-
-            dbContext.Entry(course).State = EntityState.Modified;
-
-            return result;
         }
     }
 }
