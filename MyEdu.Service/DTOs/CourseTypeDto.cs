@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyEdu.Domain.Entities.Courses
+namespace MyEdu.Service.DTOs
 {
-    public class CourseType
+    public class CourseTypeDto
     {
-        public long Id { get; set; }
         public string Name { get; set; }
     }
 }

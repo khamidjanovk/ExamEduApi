@@ -8,6 +8,7 @@ namespace MyEdu.Data.Repositories.Interfaces
         IUserRepository Users { get; }
         ILessonRepository Lessons { get; }
         IPartRepository Parts { get; }
+        ICourseTypeRepository CourseTypes { get; }
         Task SaveChangesAsync();
     }
 }

@@ -8,6 +8,6 @@ namespace MyEdu.Domain.Entities.Lessons
         public string Name { get; set; }
         public string Length { get; set; }
         public string VideoUrl { get; set; }
-        public Part Part { get; set; }
+        public virtual Part Part { get; set; }
     }
 }

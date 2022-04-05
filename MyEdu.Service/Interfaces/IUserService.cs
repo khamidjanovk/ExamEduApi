@@ -15,6 +15,6 @@ namespace MyEdu.Service.Interfaces
         Task<BaseResponse<User>> GetAsync(Expression<Func<User, bool>> expression);
         Task<BaseResponse<IQueryable<User>>> GetAllAsync(PaginationParams @params, Expression<Func<User, bool>> expression = null);
         Task<BaseResponse<bool>> DeleteAsync(Expression<Func<User, bool>> expression);
-        Task<BaseResponse<User>> UpdateAsync(long id, UserDto studentDto);
+        Task<BaseResponse<User>> UpdateAsync(long id, UserDto userDto);
     }
 }

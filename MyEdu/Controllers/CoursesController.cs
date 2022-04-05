@@ -25,7 +25,7 @@ namespace MyEdu.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BaseResponse<Course>>> PostCourseAsync([FromForm]CourseDto courseDto)
+        public async ValueTask<ActionResult<BaseResponse<Course>>> PostAsync([FromForm]CourseDto courseDto)
         {
             var course = await courseService.CreateAsync(courseDto);
 
@@ -33,7 +33,7 @@ namespace MyEdu.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<BaseResponse<IQueryable<Course>>>> GetCoursesAsync([FromQuery] PaginationParams @params)
+        public async ValueTask<ActionResult<BaseResponse<IQueryable<Course>>>> GetAllAsync([FromQuery] PaginationParams @params)
         {
             var courses = await courseService.GetAllAsync(@params);
 
@@ -41,7 +41,7 @@ namespace MyEdu.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<BaseResponse<Course>>> GetCourseAsync(long id)
+        public async ValueTask<ActionResult<BaseResponse<Course>>> GetAsync(long id)
         {
             var course = await courseService.GetAsync(p => p.Id == id);
 
@@ -49,7 +49,7 @@ namespace MyEdu.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<BaseResponse<Course>>> PutCourseAsync(long id, CourseDto courseDto)
+        public async ValueTask<ActionResult<BaseResponse<Course>>> PutAsync(long id, CourseDto courseDto)
         {
             var course = await courseService.UpdateAsync(id, courseDto);
 
@@ -57,7 +57,7 @@ namespace MyEdu.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<BaseResponse<Course>>> DeleteCourseAsync(long id)
+        public async ValueTask<ActionResult<BaseResponse<Course>>> DeleteAsync(long id)
         {
             var course = await courseService.DeleteAsync(p =>p.Id == id);
 

@@ -7,6 +7,11 @@ namespace MyEdu.Domain.Entities.Parts
     {
         public long Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Lesson> Lessons { get; set; }
+        public virtual ICollection<Lesson> Lessons { get; set; }
+
+        public Part()
+        {
+            Lessons = new List<Lesson>();
+        }
     }
 }

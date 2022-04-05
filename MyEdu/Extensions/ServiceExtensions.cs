@@ -15,6 +15,7 @@ namespace MyEdu.Extensions
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<ILessonService, LessonService>();
             services.AddScoped<IPartService, PartService>();
+            services.AddScoped<ICourseTypeService, CourseTypeService>();
         }
     }
 }
