@@ -5,14 +5,11 @@ using MyEdu.Data.Repositories.Interfaces;
 using MyEdu.Domain.Common;
 using MyEdu.Domain.Configurations;
 using MyEdu.Domain.Entities.Courses;
-using MyEdu.Domain.Entities.Users;
 using MyEdu.Service.DTOs;
 using MyEdu.Service.Extensions;
 using MyEdu.Service.Helpers;
 using MyEdu.Service.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -26,7 +23,6 @@ namespace MyEdu.Service.Services
         private readonly IWebHostEnvironment env;
         private readonly IConfiguration config;
         private readonly HttpContextHelper httpContext;
-
         public CourseService(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment env, IConfiguration config)
         {
             this.unitOfWork = unitOfWork;
@@ -41,9 +37,9 @@ namespace MyEdu.Service.Services
             var response = new BaseResponse<Course>();
 
             // check for course
-            var existStudent = 
+            var existStudent =
                 await unitOfWork.Courses.GetAsync(p => p.Name == courseDto.Name);
-            
+
             if (existStudent is not null)
             {
                 response.Error = new ErrorResponse(400, "Course is exist");
@@ -51,19 +47,19 @@ namespace MyEdu.Service.Services
             }
 
             //check for CourseType
-            var existCourseType = 
+            var existCourseType =
                 await unitOfWork.CourseTypes.GetAsync(p => p.Id == courseDto.CourseTypeId);
-            
+
             var mappedCourse = mapper.Map<Course>(courseDto);
 
             mappedCourse.CourseType = existCourseType;
 
-            var resultFile = 
-                await SaveFile
+            var resultFile =
+                await FileExtensions
                 .SaveFileAsync
                 (courseDto.Image.OpenReadStream(),
                 config,
-                env, 
+                env,
                 courseDto.Image.FileName);
 
             mappedCourse.ImageUrl = resultFile.FileName;
@@ -105,6 +101,8 @@ namespace MyEdu.Service.Services
             var response = new BaseResponse<IQueryable<Course>>();
 
             var courses = await unitOfWork.Courses.GetAllAsync(expression);
+            
+            courses.ToList().ForEach(p => p.ImageUrl = WebUrlExtensions.GetFullWebUrl(p.ImageUrl, config));
 
             response.Data = courses.ToPagedList(@params);
 
@@ -122,6 +120,8 @@ namespace MyEdu.Service.Services
                 return response;
             }
 
+            course.ImageUrl = WebUrlExtensions.GetFullWebUrl(course.ImageUrl, config);
+
             response.Data = course;
 
             return response;
@@ -137,14 +137,16 @@ namespace MyEdu.Service.Services
             course.Description = courseDto.Description;
             course.Name = courseDto.Name;
             course.CreatedDate = courseDto.CreatedDate;
-            course.CourseType = 
+            course.CourseType =
                 await unitOfWork.CourseTypes.GetAsync(p => p.Id == courseDto.CourseTypeId);
+            
             course.LearnAbout = courseDto.LearnAbout;
-            course.ImageUrl = 
-                (await SaveFile
+            
+            course.ImageUrl =
+                (await FileExtensions
                 .SaveFileAsync(courseDto.Image.OpenReadStream(),
-                config, 
-                env, 
+                config,
+                env,
                 courseDto.Image.FileName)).FileName;
 
             var result = await unitOfWork.Courses.UpdateAsync(course);
@@ -156,6 +158,8 @@ namespace MyEdu.Service.Services
                 response.Error = new ErrorResponse(404, "User not found");
                 return response;
             }
+
+            course.ImageUrl = WebUrlExtensions.GetFullWebUrl(course.ImageUrl, config);
 
             response.Data = course;
 

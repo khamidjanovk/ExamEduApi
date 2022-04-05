@@ -23,7 +23,7 @@ namespace MyEdu.Service.Services
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
-        public async Task<BaseResponse<Part>> CreateAsync(PartDto partDto)  
+        public async Task<BaseResponse<Part>> CreateAsync(PartDto partDto)
         {
             var response = new BaseResponse<Part>();
 

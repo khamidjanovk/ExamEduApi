@@ -10,7 +10,7 @@ namespace MyEdu.Data.Contexts
     {
         public EducationCenterDbContext(DbContextOptions<EducationCenterDbContext> options) : base(options)
         {
-            
+
         }
 
         public virtual DbSet<Course> Courses { get; set; }

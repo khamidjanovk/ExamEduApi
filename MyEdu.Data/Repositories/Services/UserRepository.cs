@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using MyEdu.Data.Contexts;
+﻿using MyEdu.Data.Contexts;
 using MyEdu.Data.Repositories.Interfaces;
 using MyEdu.Domain.Entities.Users;
 

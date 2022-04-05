@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MyEdu.Domain.Entities.Courses
+﻿namespace MyEdu.Domain.Entities.Courses
 {
     public class CourseType
     {

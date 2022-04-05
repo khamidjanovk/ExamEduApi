@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using MyEdu.Domain.Common;
+﻿using MyEdu.Domain.Common;
 using MyEdu.Domain.Configurations;
 using MyEdu.Domain.Entities.Users;
 using MyEdu.Service.DTOs;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace MyEdu.Service.Interfaces
 {

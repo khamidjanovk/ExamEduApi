@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using MyEdu.Data.Repositories.Interfaces;
@@ -16,6 +10,10 @@ using MyEdu.Service.DTOs;
 using MyEdu.Service.Extensions;
 using MyEdu.Service.Helpers;
 using MyEdu.Service.Interfaces;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace MyEdu.Service.Services
 {
@@ -35,7 +33,7 @@ namespace MyEdu.Service.Services
             this.config = config;
             httpContext = new HttpContextHelper();
         }
-        
+
         public async Task<BaseResponse<User>> CreateAsync(UserDto userDto)
         {
             var response = new BaseResponse<User>();
@@ -119,7 +117,7 @@ namespace MyEdu.Service.Services
                 response.Error = new ErrorResponse(404, "User not found");
                 return response;
             }
-            
+
             var user = mapper.Map<User>(userDto);
             user.Id = id;
             user.Update();

@@ -8,10 +8,11 @@ using MyEdu.Service.DTOs;
 using MyEdu.Service.Extensions;
 using MyEdu.Service.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using VideoLibrary;
+using YoutubeExplode;
 
 namespace MyEdu.Service.Services
 {
@@ -25,19 +26,13 @@ namespace MyEdu.Service.Services
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
-        
+
         public async Task<BaseResponse<Lesson>> CreateAsync(LessonDto lessonDto)
         {
             var response = new BaseResponse<Lesson>();
 
-            // check for exist part
-            var existLesson = await unitOfWork.Lessons.GetAsync(p => p.Name == lessonDto.Name);
-            if (existLesson is not null)
-            {
-                response.Error = new ErrorResponse(400, "User is exist");
-                return response;
-            }
-
+            
+            
             var existPart = await unitOfWork.Parts.GetAsync(p => p.Id == lessonDto.PartId);
             if (existPart is null)
             {
@@ -45,9 +40,17 @@ namespace MyEdu.Service.Services
                 return response;
             }
 
+            var youtube = new YoutubeClient();
+            var video = await youtube.Videos.GetAsync("https://www.youtube.com/watch?v=" + lessonDto.VideoUrl);
+
             // create after checking success
-            var mappedLesson = mapper.Map<Lesson>(lessonDto);
-            mappedLesson.Part = existPart;
+            var mappedLesson = new Lesson
+            {
+                Name = video.Title,
+                Part = existPart,
+                Length = video.Duration.ToString(),
+                VideoUrl = lessonDto.VideoUrl
+            };
 
             existPart.Lessons.Add(mappedLesson);
 
@@ -56,6 +59,8 @@ namespace MyEdu.Service.Services
             var result = await unitOfWork.Lessons.CreateAsync(mappedLesson);
 
             await unitOfWork.SaveChangesAsync();
+
+            result.VideoUrl = "https://www.youtube.com/watch?v=" + result.VideoUrl;
 
             response.Data = result;
 
@@ -104,7 +109,7 @@ namespace MyEdu.Service.Services
                 response.Error = new ErrorResponse(404, "User not found");
                 return response;
             }
-            
+
             response.Data = lesson;
 
             return response;

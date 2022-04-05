@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyEdu.Domain.Common;
 using MyEdu.Domain.Configurations;
 using MyEdu.Domain.Entities.Courses;
@@ -19,17 +18,17 @@ namespace MyEdu.Controllers
         {
             this.courseTypeService = courseTypeService;
         }
-        
+
         [HttpPost]
         public async Task<ActionResult<BaseResponse<CourseType>>> CreateAsync(CourseTypeDto courseTypeDto)
         {
             var result = await courseTypeService.CreateAsync(courseTypeDto);
-            
+
             return StatusCode(result.Code ?? result.Error.Code.Value, result);
         }
 
         [HttpGet]
-        public async Task<ActionResult<BaseResponse<IQueryable<CourseType>>>> GetAllAsync([FromQuery]PaginationParams @params)
+        public async Task<ActionResult<BaseResponse<IQueryable<CourseType>>>> GetAllAsync([FromQuery] PaginationParams @params)
         {
             var result = await courseTypeService.GetAllAsync(@params);
 

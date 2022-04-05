@@ -1,8 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
-using MyEdu.Domain.Common;
+﻿using MyEdu.Domain.Common;
 using MyEdu.Domain.Enums;
+using System;
+using System.Text.Json.Serialization;
 
 namespace MyEdu.Domain.Entities.Users
 {
@@ -15,7 +14,7 @@ namespace MyEdu.Domain.Entities.Users
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
         public string Username { get; set; }
-        
+
         [JsonIgnore]
         public DateTime CreatedAt { get; set; } = DateTime.Now.ToLocalTime();
         [JsonIgnore]

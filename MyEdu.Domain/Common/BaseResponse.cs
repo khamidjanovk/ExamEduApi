@@ -9,6 +9,6 @@ namespace MyEdu.Domain.Common
 
         public TSource Data { get; set; }
 
-        public ErrorResponse Error { get; set; }    
+        public ErrorResponse Error { get; set; }
     }
 }
