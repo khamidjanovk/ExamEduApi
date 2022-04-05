@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MyEdu.Domain.Enums
+﻿namespace MyEdu.Domain.Enums
 {
     public enum ItemState
     {

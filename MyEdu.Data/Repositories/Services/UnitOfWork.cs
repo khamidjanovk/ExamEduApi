@@ -1,9 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using MyEdu.Data.Contexts;
 using MyEdu.Data.Repositories.Interfaces;
+using System;
+using System.Threading.Tasks;
 
 namespace MyEdu.Data.Repositories.Services
 {
@@ -11,7 +10,7 @@ namespace MyEdu.Data.Repositories.Services
     {
         private readonly EducationCenterDbContext context;
         private readonly IConfiguration config;
-        
+
         public ICourseRepository Courses { get; private set; }
 
         public IUserRepository Users { get; private set; }
@@ -19,7 +18,7 @@ namespace MyEdu.Data.Repositories.Services
         public ILessonRepository Lessons { get; private set; }
 
         public IPartRepository Parts { get; private set; }
-        
+
         public ICourseTypeRepository CourseTypes { get; private set; }
 
         public UnitOfWork(EducationCenterDbContext context, IConfiguration config)
@@ -33,7 +32,7 @@ namespace MyEdu.Data.Repositories.Services
             Lessons = new LessonRepository(context);
             Parts = new PartRepository(context);
         }
-        
+
         public async Task SaveChangesAsync()
         {
             await context.SaveChangesAsync();

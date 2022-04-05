@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyEdu.Domain.Common;
 using MyEdu.Domain.Configurations;
@@ -25,7 +24,7 @@ namespace MyEdu.Controllers
         }
 
         [HttpPost]
-        public async ValueTask<ActionResult<BaseResponse<Course>>> PostAsync([FromForm]CourseDto courseDto)
+        public async ValueTask<ActionResult<BaseResponse<Course>>> PostAsync([FromForm] CourseDto courseDto)
         {
             var course = await courseService.CreateAsync(courseDto);
 
@@ -59,7 +58,7 @@ namespace MyEdu.Controllers
         [HttpDelete("{id}")]
         public async ValueTask<ActionResult<BaseResponse<Course>>> DeleteAsync(long id)
         {
-            var course = await courseService.DeleteAsync(p =>p.Id == id);
+            var course = await courseService.DeleteAsync(p => p.Id == id);
 
             return StatusCode(course.Code ?? course.Error.Code.Value, course);
         }

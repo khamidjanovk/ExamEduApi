@@ -10,10 +10,8 @@ using MyEdu.Service.Extensions;
 using MyEdu.Service.Helpers;
 using MyEdu.Service.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MyEdu.Service.Services
@@ -120,7 +118,7 @@ namespace MyEdu.Service.Services
             var result = await unitOfWork.CourseTypes.UpdateAsync(courseType);
 
             await unitOfWork.SaveChangesAsync();
-            
+
             if (result is null)
             {
                 response.Error = new ErrorResponse(404, "User not found");

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using MyEdu.Domain.Entities.Lessons;
+﻿using MyEdu.Domain.Entities.Lessons;
+using System.Collections.Generic;
 
 namespace MyEdu.Domain.Entities.Parts
 {

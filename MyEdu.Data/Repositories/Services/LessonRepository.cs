@@ -1,10 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MyEdu.Data.Contexts;
+﻿using MyEdu.Data.Contexts;
 using MyEdu.Data.Repositories.Interfaces;
 using MyEdu.Domain.Entities.Lessons;
-using System;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace MyEdu.Data.Repositories.Services
 {

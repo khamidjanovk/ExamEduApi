@@ -4,6 +4,6 @@ namespace MyEdu.Data.Repositories.Interfaces
 {
     public interface IPartRepository : IGenericRepository<Part>
     {
-        
+
     }
 }

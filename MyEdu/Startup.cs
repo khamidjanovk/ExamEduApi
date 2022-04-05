@@ -1,21 +1,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MyEdu.Data.Contexts;
-using MyEdu.Data.Repositories.Interfaces;
-using MyEdu.Data.Repositories.Services;
 using MyEdu.Extensions;
 using MyEdu.Service.Helpers;
-using MyEdu.Service.Interfaces;
 using MyEdu.Service.Mappers;
-using MyEdu.Service.Services;
-using System.Text.Json.Serialization;
 
 namespace MyEdu
 {
@@ -43,7 +37,8 @@ namespace MyEdu
             });
 
             services.AddControllers().AddJsonOptions(
-                config => {
+                config =>
+                {
                     config
                     .JsonSerializerOptions
                     .IgnoreReadOnlyProperties = true;
