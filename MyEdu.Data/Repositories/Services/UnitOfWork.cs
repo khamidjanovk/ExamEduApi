@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyEdu.Data.Repositories.Services
 {
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    public class UnitOfWork : IUnitOfWork,  IDisposable
     {
         private readonly EducationCenterDbContext context;
         private readonly IConfiguration config;

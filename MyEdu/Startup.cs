@@ -36,13 +36,7 @@ namespace MyEdu
                 options.UseNpgsql(Configuration.GetConnectionString("EducationDb"));
             });
 
-            services.AddControllers().AddJsonOptions(
-                config =>
-                {
-                    config
-                    .JsonSerializerOptions
-                    .IgnoreReadOnlyProperties = true;
-                });
+            services.AddControllers().AddNewtonsoftJson();
 
             services.AddSwaggerGen(c =>
             {

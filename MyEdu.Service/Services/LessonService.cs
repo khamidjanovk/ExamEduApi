@@ -11,7 +11,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using VideoLibrary;
 using YoutubeExplode;
 
 namespace MyEdu.Service.Services
@@ -31,8 +30,8 @@ namespace MyEdu.Service.Services
         {
             var response = new BaseResponse<Lesson>();
 
-            
-            
+
+
             var existPart = await unitOfWork.Parts.GetAsync(p => p.Id == lessonDto.PartId);
             if (existPart is null)
             {

@@ -12,7 +12,7 @@ namespace MyEdu.Service.Extensions
 
             string storagePath = config.GetSection("Storage:ImageUrl").Value;
 
-             var url = $@"{hostUrl}/{storagePath}/{fileName}";
+            var url = $@"{hostUrl}/{storagePath}/{fileName}";
 
             return url;
         }

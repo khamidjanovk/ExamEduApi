@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace MyEdu.Service.DTOs
+﻿namespace MyEdu.Service.DTOs
 {
     public class LessonDto
     {

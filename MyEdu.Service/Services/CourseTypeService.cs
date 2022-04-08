@@ -7,7 +7,6 @@ using MyEdu.Domain.Configurations;
 using MyEdu.Domain.Entities.Courses;
 using MyEdu.Service.DTOs;
 using MyEdu.Service.Extensions;
-using MyEdu.Service.Helpers;
 using MyEdu.Service.Interfaces;
 using System;
 using System.Linq;
@@ -20,17 +19,11 @@ namespace MyEdu.Service.Services
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
-        private readonly IWebHostEnvironment env;
-        private readonly IConfiguration config;
-        private readonly HttpContextHelper httpContext;
 
         public CourseTypeService(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment env, IConfiguration config)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
-            this.env = env;
-            this.config = config;
-            httpContext = new HttpContextHelper();
         }
 
         public async Task<BaseResponse<CourseType>> CreateAsync(CourseTypeDto courseTypeDto)

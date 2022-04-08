@@ -8,7 +8,6 @@ using MyEdu.Domain.Entities.Users;
 using MyEdu.Service.Configurations;
 using MyEdu.Service.DTOs;
 using MyEdu.Service.Extensions;
-using MyEdu.Service.Helpers;
 using MyEdu.Service.Interfaces;
 using System;
 using System.Linq;
@@ -21,17 +20,11 @@ namespace MyEdu.Service.Services
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
-        private readonly IWebHostEnvironment env;
-        private readonly IConfiguration config;
-        private readonly HttpContextHelper httpContext;
 
         public UserService(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment env, IConfiguration config)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
-            this.env = env;
-            this.config = config;
-            httpContext = new HttpContextHelper();
         }
 
         public async Task<BaseResponse<User>> CreateAsync(UserDto userDto)

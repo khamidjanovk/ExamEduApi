@@ -1,18 +1,17 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using MyEdu.Data.Repositories.Interfaces;
 using MyEdu.Domain.Common;
 using MyEdu.Domain.Configurations;
 using MyEdu.Domain.Entities.Courses;
 using MyEdu.Service.DTOs;
 using MyEdu.Service.Extensions;
-using MyEdu.Service.Helpers;
 using MyEdu.Service.Interfaces;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using MyEdu.Data.Repositories.Interfaces;
 
 namespace MyEdu.Service.Services
 {
@@ -22,14 +21,13 @@ namespace MyEdu.Service.Services
         private readonly IMapper mapper;
         private readonly IWebHostEnvironment env;
         private readonly IConfiguration config;
-        private readonly HttpContextHelper httpContext;
+
         public CourseService(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment env, IConfiguration config)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
             this.env = env;
             this.config = config;
-            httpContext = new HttpContextHelper();
         }
 
         public async Task<BaseResponse<Course>> CreateAsync(CourseDto courseDto)
@@ -101,7 +99,7 @@ namespace MyEdu.Service.Services
             var response = new BaseResponse<IQueryable<Course>>();
 
             var courses = await unitOfWork.Courses.GetAllAsync(expression);
-            
+
             courses.ToList().ForEach(p => p.ImageUrl = WebUrlExtensions.GetFullWebUrl(p.ImageUrl, config));
 
             response.Data = courses.ToPagedList(@params);
@@ -139,9 +137,9 @@ namespace MyEdu.Service.Services
             course.CreatedDate = courseDto.CreatedDate;
             course.CourseType =
                 await unitOfWork.CourseTypes.GetAsync(p => p.Id == courseDto.CourseTypeId);
-            
+
             course.LearnAbout = courseDto.LearnAbout;
-            
+
             course.ImageUrl =
                 (await FileExtensions
                 .SaveFileAsync(courseDto.Image.OpenReadStream(),
