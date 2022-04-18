@@ -52,6 +52,8 @@ namespace MyEdu.Data.Repositories.Services
 
         public async Task<T> UpdateAsync(T entity)
         {
+            dbContext.Entry(entity).State = EntityState.Modified;
+
             var entry = dbSet.Update(entity);
 
             return entry.Entity;

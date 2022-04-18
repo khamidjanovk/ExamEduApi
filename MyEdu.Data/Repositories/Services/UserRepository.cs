@@ -1,6 +1,8 @@
-﻿using MyEdu.Data.Contexts;
+﻿using Microsoft.EntityFrameworkCore;
+using MyEdu.Data.Contexts;
 using MyEdu.Data.Repositories.Interfaces;
 using MyEdu.Domain.Entities.Users;
+using System.Threading.Tasks;
 
 namespace MyEdu.Data.Repositories.Services
 {
@@ -8,6 +10,7 @@ namespace MyEdu.Data.Repositories.Services
     {
         public UserRepository(EducationCenterDbContext dbContext) : base(dbContext)
         {
+
         }
     }
 }

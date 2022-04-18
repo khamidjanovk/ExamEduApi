@@ -111,15 +111,14 @@ namespace MyEdu.Service.Services
                 return response;
             }
 
-            var user = mapper.Map<User>(userDto);
-            user.Id = id;
-            user.Update();
+            result = mapper.Map(userDto, result);
+            result.Update();
 
-            await unitOfWork.Users.UpdateAsync(user);
+            await unitOfWork.Users.UpdateAsync(result);
 
             await unitOfWork.SaveChangesAsync();
 
-            response.Data = user;
+            response.Data = result;
 
             return response;
         }
