@@ -15,10 +15,8 @@ namespace MyEdu.Service.Attributes
             {
                 return ValidationResult.Success;
             }
-            else
-            {
-                return new ValidationResult("Invalid phone number");
-            }
+
+            return new ValidationResult("Invalid phone number");
         }
     }
 }

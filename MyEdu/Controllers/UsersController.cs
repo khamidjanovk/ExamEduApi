@@ -4,7 +4,9 @@ using MyEdu.Domain.Common;
 using MyEdu.Domain.Configurations;
 using MyEdu.Domain.Entities.Users;
 using MyEdu.Service.DTOs;
+using MyEdu.Service.Extensions;
 using MyEdu.Service.Interfaces;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -61,6 +63,16 @@ namespace MyEdu.Controllers
             var user = await userService.DeleteAsync(p => p.Id == id);
 
             return StatusCode(user.Code ?? user.Error.Code.Value, user);
+        }
+
+        [HttpGet("download")]
+        public async ValueTask<IActionResult> DownloadUsers([FromQuery] PaginationParams @params)
+        {
+            var users = await userService.GetAllAsync(@params);
+
+            var result = users.Data.ExportToExcel();
+
+            return result;
         }
     }
 }

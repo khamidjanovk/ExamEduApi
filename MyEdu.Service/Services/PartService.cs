@@ -107,15 +107,13 @@ namespace MyEdu.Service.Services
                 return response;
             }
 
-            var part = mapper.Map<Part>(partDto);
+            result = mapper.Map(partDto, result);
 
-            part.Id = id;
-
-            await unitOfWork.Parts.UpdateAsync(part);
+            await unitOfWork.Parts.UpdateAsync(result);
 
             await unitOfWork.SaveChangesAsync();
 
-            response.Data = part;
+            response.Data = result;
 
             return response;
         }

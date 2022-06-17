@@ -22,14 +22,12 @@ namespace MyEdu.Service.Services
         private readonly IMapper mapper;
         private readonly IWebHostEnvironment env;
         private readonly IConfiguration config;
-        private readonly HttpContextHelper httpContext;
         public CourseService(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment env, IConfiguration config)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
             this.env = env;
             this.config = config;
-            httpContext = new HttpContextHelper();
         }
 
         public async Task<BaseResponse<Course>> CreateAsync(CourseDto courseDto)

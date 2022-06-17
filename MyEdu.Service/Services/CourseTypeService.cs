@@ -111,13 +111,7 @@ namespace MyEdu.Service.Services
         {
             var response = new BaseResponse<CourseType>();
 
-            var courseType = await unitOfWork.CourseTypes.GetAsync(p => p.Id == id);
-
-            courseType.Name = courseTypeDto.Name;
-
-            var result = await unitOfWork.CourseTypes.UpdateAsync(courseType);
-
-            await unitOfWork.SaveChangesAsync();
+            var result = await unitOfWork.CourseTypes.GetAsync(p => p.Id == id);
 
             if (result is null)
             {
@@ -125,6 +119,12 @@ namespace MyEdu.Service.Services
                 return response;
             }
 
+            result = mapper.Map(courseTypeDto, result);
+
+            await unitOfWork.CourseTypes.UpdateAsync(result);
+
+            await unitOfWork.SaveChangesAsync();
+            
             response.Data = result;
 
             return response;

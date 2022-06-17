@@ -127,9 +127,7 @@ namespace MyEdu.Service.Services
                 return response;
             }
 
-            var mappedLesson = mapper.Map<Lesson>(lessonDto);
-
-            lesson.Id = id;
+            lesson = mapper.Map(lessonDto, lesson);
 
             await unitOfWork.Lessons.UpdateAsync(lesson);
 
